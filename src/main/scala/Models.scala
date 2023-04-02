@@ -34,7 +34,6 @@ object VersionOrdering extends Ordering[GitlabBranch] {
     x.getName
       .substring("release/".length)
       .split("\\.")
-//      .map(digit => if (digit.length == 1) digit + "0" else digit)
       .map(_.toInt)
 
 }
