@@ -1,7 +1,7 @@
 package ru.starfish
 package service
 
-import service.FileUtils.bytesToFile
+import FileUtils.bytesToFile
 
 import com.typesafe.scalalogging.Logger
 import org.gitlab.api.GitlabAPI
@@ -44,7 +44,7 @@ object GitLabService {
     def tryGettingRepoFile(tree: GitlabRepositoryTree): Future[(GitlabRepositoryFile, GitlabProject)] = {
       import retry.Backoff
       log.info(s"Trying to get ${gitlabProject.getName}:${tree.getPath}")
-      Backoff(8, 1.second).apply(
+      Backoff(5, 1.second).apply(
         Future(
           try {
             (api.getRepositoryFile(gitlabProject, tree.getPath, branch.getCommit.getId), gitlabProject)

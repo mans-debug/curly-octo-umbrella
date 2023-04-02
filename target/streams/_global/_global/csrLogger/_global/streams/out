@@ -1,12 +1,2 @@
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/retry/retry_2.13/0.3.6/retry_2.13-0.3.6.pom
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/odelay/odelay-core_2.13/0.4.0/odelay-core_2.13-0.4.0.pom
-[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/modules/scala-collection-compat_2.13/2.6.0/scala-collection-compat_2.13-2.6.0.pom
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/odelay/odelay-core_2.13/0.4.0/odelay-core_2.13-0.4.0.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/retry/retry_2.13/0.3.6/retry_2.13-0.3.6.jar
-[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/modules/scala-collection-compat_2.13/2.6.0/scala-collection-compat_2.13-2.6.0.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/odelay/odelay-core_2.13/0.4.0/odelay-core_2.13-0.4.0-sources.jar
-[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/modules/scala-collection-compat_2.13/2.6.0/scala-collection-compat_2.13-2.6.0-sources.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/retry/retry_2.13/0.3.6/retry_2.13-0.3.6-sources.jar
-[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/modules/scala-collection-compat_2.13/2.6.0/scala-collection-compat_2.13-2.6.0-javadoc.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/retry/retry_2.13/0.3.6/retry_2.13-0.3.6-javadoc.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/softwaremill/odelay/odelay-core_2.13/0.4.0/odelay-core_2.13-0.4.0-javadoc.jar
+[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.12.17/scala-compiler-2.12.17-javadoc.jar
+[debug] downloaded https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.17/scala-library-2.12.17-javadoc.jar

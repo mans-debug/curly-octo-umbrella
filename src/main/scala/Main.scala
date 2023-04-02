@@ -9,8 +9,10 @@ import io.circe.generic.extras._
 import org.gitlab.api.models.{GitlabProject, GitlabRepositoryFile}
 import org.gitlab.api.{GitlabAPI, TokenType}
 
+import scala.collection.{SeqView, View}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.duration.Duration.Inf
 import scala.concurrent.{Await, Future}
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.util.{Failure, Success, Try}
@@ -38,11 +40,9 @@ object Main {
       dto <- getGitlabProjectFiles(project, latestReleaseBranch)
     ) yield dto
 
-    val downloadDtoFuture = futureDtos.view.map(_.transform(downloadOnSuccess))
-      .map(Await.ready(_, Duration.Inf).value)
-      .filter(hasFailed)
-      .map(_.get.failed.get.getMessage)
-      .toList
+    val downloadDtoFuture: SeqView[Future[Boolean]] = futureDtos.view.map(_.transform(downloadOnSuccess).recover({case _: Throwable => false}))
+    Await.result(Future.sequence(downloadDtoFuture), Inf)
+
     println(downloadDtoFuture.mkString(sep = "\n"))
   }
 
