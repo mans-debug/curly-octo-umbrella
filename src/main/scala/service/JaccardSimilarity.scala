@@ -3,15 +3,14 @@ package service
 
 import better.files.File
 import com.typesafe.scalalogging.Logger
+import ru.starfish.config.Constants.SIMILARITY_PERCENTAGE
 
 import scala.collection.{immutable, mutable}
 import scala.util.Using
+import scala.io.Source
 
 object JaccardSimilarity {
   private val log = Logger(getClass.getName)
-  val bound = 80
-
-  import scala.io.Source
 
   private def jaccardSimilarity(file1: String, file2: String): Double =
     Using
@@ -35,7 +34,7 @@ object JaccardSimilarity {
       for ((compareFile, j) <- files.zipWithIndex) {
         if (compareFile.path != file.path) {
           val matchPercent = jaccardSimilarity(file.path.toString, compareFile.path.toString)
-          if (matchPercent > bound) {
+          if (matchPercent > SIMILARITY_PERCENTAGE) {
             val key = file.name
             processed.put(key, compareFile.name :: processed(key))
           }

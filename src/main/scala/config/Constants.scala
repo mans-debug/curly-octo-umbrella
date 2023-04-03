@@ -13,6 +13,8 @@ object Constants {
   val FLATTENED_DTO: String = BASE_DIR + "/flatten"
   val GROUPED_DTO: String = BASE_DIR + "/grouped"
 
+  val SIMILARITY_PERCENTAGE = 80 // [0-100]
+
   val GITLAB_URL = "https://starfish.gitlab.yandexcloud.net"
   val GITLAB_PRIVATE_TOKEN = "secret"
 
