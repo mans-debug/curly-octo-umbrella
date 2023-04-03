@@ -7,7 +7,6 @@ import service.JaccardSimilarity
 import util.FileUtils
 
 import com.typesafe.scalalogging.Logger
-import io.circe.generic.auto
 import org.gitlab.api.models.{GitlabProject, GitlabRepositoryFile}
 import org.gitlab.api.{GitlabAPI, TokenType}
 
