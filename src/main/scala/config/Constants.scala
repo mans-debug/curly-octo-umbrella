@@ -14,7 +14,7 @@ object Constants {
   val GROUPED_DTO: String = BASE_DIR + "/grouped"
 
   val GITLAB_URL = "https://starfish.gitlab.yandexcloud.net"
-  val GITLAB_PRIVATE_TOKEN = "glpat-AD2FbLwuFx2FEgNzYN8t"
+  val GITLAB_PRIVATE_TOKEN = "secret"
 
   Try(File(BASE_DIR).createDirectory())
   Try(File(GITLAB_PROJECT_DTO).createDirectory())
