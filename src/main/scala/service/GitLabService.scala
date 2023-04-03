@@ -1,7 +1,9 @@
 package ru.starfish
 package service
 
-import FileUtils.bytesToFile
+import exceptions.FailedDtoPull
+import util.FileUtils.bytesToFile
+import util.{ProjectsQueryImproved, VersionOrdering}
 
 import com.typesafe.scalalogging.Logger
 import org.gitlab.api.GitlabAPI
@@ -14,10 +16,8 @@ import scala.concurrent.duration.DurationInt
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 import scala.util.Try
 
-
 object GitLabService {
   private val log = Logger(getClass.getName)
-
 
   private val releaseRegex = """release/\d{1,2}\.\d{1,2}\.\d{1,2}"""
 
@@ -25,19 +25,20 @@ object GitLabService {
     Try {
       branches
         .filter(_.getName.matches(releaseRegex))
-        .sorted(VersionOrdering.reverse).head
+        .sorted(VersionOrdering.reverse)
+        .head
     }.getOrElse {
-      val branch = branches.find(_.getName.equals("develop"))
+      val branch = branches
+        .find(_.getName.equals("develop"))
         .orElse(branches.find(_.getName.equals("master")))
         .getOrElse(branches.head)
       log.info(s"Have taken branch ${branch.getName} instead of release for project ${project.getName}")
       branch
     }
 
-
-  def getGitlabProjectFiles(gitlabProject: GitlabProject,
-                            branch: GitlabBranch)
-                           (implicit api: GitlabAPI): List[Future[(GitlabRepositoryFile, GitlabProject)]] = {
+  def getGitlabProjectFiles(gitlabProject: GitlabProject, branch: GitlabBranch)(implicit
+    api: GitlabAPI
+  ): List[Future[(GitlabRepositoryFile, GitlabProject)]] = {
     implicit val successPull: Success[(GitlabRepositoryFile, GitlabProject)] =
       Success[(GitlabRepositoryFile, GitlabProject)] { case (file, _) => file != null }
 
@@ -55,22 +56,21 @@ object GitLabService {
       )
     }
 
-    api.getRepositoryTree(gitlabProject, null, null, true)
+    api
+      .getRepositoryTree(gitlabProject, null, null, true)
       .asScala
       .filter(tree => tree.getPath.contains("dto") && tree.getType.equals("blob"))
       .map(tryGettingRepoFile)
       .toList
   }
 
-
-  def downloadGitlabRepoFile(repoFile: GitlabRepositoryFile,
-                             project: GitlabProject,
-                             destination: String)(implicit api: GitlabAPI): Boolean = {
+  def downloadGitlabRepoFile(repoFile: GitlabRepositoryFile, project: GitlabProject, destination: String)(implicit
+    api: GitlabAPI
+  ): Boolean = {
     val bytes = api.getRawBlobContent(project, repoFile.getBlobId)
     log.info(s"Writing ${project.getName}:${repoFile.getFileName}")
     bytesToFile(bytes, destination, s"/${repoFile.getFileName}")
   }
-
 
   def coreProjects(implicit api: GitlabAPI): List[GitlabProject] = {
     val query = new ProjectsQueryImproved()

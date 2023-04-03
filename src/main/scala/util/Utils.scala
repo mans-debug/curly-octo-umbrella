@@ -1,12 +1,13 @@
 package ru.starfish
-package service
+package util
 
-import better.files.File
+import better.files.{File, using}
 import org.gitlab.api.models.GitlabBranch
 import org.gitlab.api.query.ProjectsQuery
 
 import java.io.{BufferedOutputStream, FileOutputStream}
 import java.nio.file.{Files, Paths}
+import scala.collection.mutable
 import scala.util.Try
 
 object FileUtils {
@@ -18,24 +19,39 @@ object FileUtils {
     true
   }
 
-  def toFiles(file: File): List[File] = {
-    if (file.isDirectory) {
-      file.children.flatMap(toFiles).toList
-    } else {
-      List(file)
-    }
-  }
-
   def flattenDir(copyTo: String, from: String): Unit = {
-    val dirPath = copyTo + "/flatten"
-    val destination: File = Try(File(dirPath).createDirectory()).getOrElse(File(dirPath))
-    File(from)
-      .children
+    val destination: File = Try(File(copyTo).createDirectory()).getOrElse(File(copyTo))
+    File(from).children
       .flatMap(toFiles)
       .zipWithIndex
       .map(file => file._1.renameTo(file._2 + s"-${file._1.name}"))
       .foreach(_.copyToDirectory(destination))
   }
+
+  def groupFilesByConnection(connections: mutable.Map[String, List[String]], copyFrom: String, copyTo: String): Unit =
+    for ((key, value) <- connections) {
+      Try {
+        val destination = File(copyTo + "/" + key.stripSuffix(".java")).createDirectory()
+        value.foreach(filepath => File(copyFrom + s"/$filepath").copyToDirectory(destination))
+        File(copyFrom + s"/$key").copyToDirectory(destination)
+      }
+    }
+
+  def parseConnectionsFromFile(connectionsFile: String): mutable.Map[String, List[String]] = {
+    using(scala.io.Source.fromFile(connectionsFile)) { resource =>
+      io.circe.parser
+        .decode[mutable.Map[String, List[String]]](resource.getLines().mkString("\n"))
+        .getOrElse(null)
+    }
+  }
+
+  private def toFiles(file: File): List[File] =
+    if (file.isDirectory) {
+      file.children.flatMap(toFiles).toList
+    } else {
+      List(file)
+    }
+
 }
 
 class ProjectsQueryImproved extends ProjectsQuery {
